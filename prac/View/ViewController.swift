@@ -18,8 +18,15 @@ class ViewController: UIViewController {
         return tableView
     }()
     
+    let activityIndicatorView: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView()
+        
+        return activityIndicator
+    }()
+    
     // MARK: - Properties
     var products = [Product]()
+    private let refreshControl = UIRefreshControl()
     
     // MARK: - Init
     override func viewDidLoad() {
@@ -29,6 +36,8 @@ class ViewController: UIViewController {
         
         setupNavigationController()
         setupTableView()
+        setupActivityIndicatorView()
+        setupRefreshControl()
         
         NetworkManager.fetchProducts(completion: {
             self.completeRequest()
@@ -54,12 +63,27 @@ class ViewController: UIViewController {
         self.navigationController?.navigationBar.prefersLargeTitles = true
     }
     
+    fileprivate func setupRefreshControl() {
+        if #available(iOS 10.0, *) {
+            tableView.refreshControl = refreshControl
+        } else {
+            tableView.addSubview(refreshControl)
+        }
+        
+        refreshControl.attributedTitle = NSAttributedString(string: "Fetching Product Data...")
+        refreshControl.addTarget(self, action: #selector(refreshProductData(_:)), for: .valueChanged)
+    }
+    
     private func completeRequest() {
         self.products = NetworkManager.products
         
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
+    }
+    
+    private func setupActivityIndicatorView() {
+        activityIndicatorView.startAnimating()
     }
 
     // MARK: - Actions
@@ -92,6 +116,17 @@ class ViewController: UIViewController {
         alertController.addAction(cancelAction)
         
         self.present(alertController, animated: true)
+    }
+    
+    @objc private func refreshProductData(_ sender: Any) {
+        NetworkManager.fetchProducts {
+            self.completeRequest()
+            
+            DispatchQueue.main.async {
+                self.refreshControl.endRefreshing()
+                self.activityIndicatorView.stopAnimating()
+            }
+        }
     }
 }
 
