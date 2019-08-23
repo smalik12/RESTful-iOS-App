@@ -9,6 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
+    // MARK: - Outlets
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -17,14 +18,25 @@ class ViewController: UIViewController {
         return tableView
     }()
     
+    // MARK: - Properties
     var products = [Product]()
     
+    // MARK: - Init
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Products"
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addProduct))
+        view.backgroundColor = .groupTableViewBackground
         
+        setupNavigationController()
+        setupTableView()
+        
+        NetworkManager.fetchProducts(completion: {
+            self.completeRequest()
+        })
+    }
+    
+    // MARK: - Methods
+    fileprivate func setupTableView() {
         view.addSubview(tableView)
         
         tableView.delegate = self
@@ -34,13 +46,23 @@ class ViewController: UIViewController {
         tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        
-        NetworkManager.fetchProducts(completion: {
-            self.completeRequest()
-        })
     }
 
+    fileprivate func setupNavigationController() {
+        title = "Products"
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Add", style: .plain, target: self, action: #selector(addProduct))
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
     
+    private func completeRequest() {
+        self.products = NetworkManager.products
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+
+    // MARK: - Actions
     @objc func addProduct() {
         let alertController = UIAlertController(title: "New Product", message: "Enter your product below", preferredStyle: .alert)
         
@@ -64,26 +86,22 @@ class ViewController: UIViewController {
             }
         })
         
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
         alertController.addAction(okAction)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(cancelAction)
         
         self.present(alertController, animated: true)
-    }
-    
-    private func completeRequest() {
-        self.products = NetworkManager.products
-        
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
     }
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    // Set the size of tableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return products.count
     }
     
+    // Create the cells of tableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! DetailTableViewCell
         
@@ -93,10 +111,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    // Table View Cells can be edited
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
+    // Delete tableView cell
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             NetworkManager.deleteProduct(productId: products[indexPath.row]._id, index: indexPath.row, completion: {
@@ -105,6 +125,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
     }
     
+    // Select tableView cell
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let alertController = UIAlertController(title: "Update Product", message: "Enter your product below", preferredStyle: .alert)
         
@@ -132,8 +153,10 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         })
         
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
         alertController.addAction(okAction)
-        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alertController.addAction(cancelAction)
         
         self.present(alertController, animated: true)
     }

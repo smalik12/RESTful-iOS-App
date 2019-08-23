@@ -14,7 +14,6 @@ class DetailTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
-        label.font = UIFont(name: "Avenir", size: 17)
         
         return label
     }()
@@ -23,7 +22,6 @@ class DetailTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
-        label.font = UIFont(name: "Avenir", size: 17)
         
         return label
     }()
@@ -55,6 +53,8 @@ class DetailTableViewCell: UITableViewCell {
         stackView.addArrangedSubview(productPrice)
         
         addSubview(stackView)
+        
+        productName.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
