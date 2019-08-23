@@ -105,14 +105,12 @@
 		4FCAD814230642C200B56EEC /* prac */ = {
 			isa = PBXGroup;
 			children = (
-				4FCAD815230642C200B56EEC /* AppDelegate.swift */,
-				4FCAD817230642C200B56EEC /* ViewController.swift */,
-				4F0044C823103072009A81A4 /* NetworkManager.swift */,
-				4F0044CA231030DE009A81A4 /* Product.swift */,
-				4F293CED230B9BE5001504E2 /* DetailTableViewCell.swift */,
-				4FCAD819230642C200B56EEC /* Main.storyboard */,
+				4FEE7370231048F6000FDC75 /* Controller */,
+				4FEE736F231048D8000FDC75 /* View */,
+				4FEE736E231048C9000FDC75 /* Model */,
+				4FEE737123104904000FDC75 /* Storyboards */,
 				4FCAD81F230642C200B56EEC /* Assets.xcassets */,
-				4FCAD821230642C200B56EEC /* LaunchScreen.storyboard */,
+				4FCAD815230642C200B56EEC /* AppDelegate.swift */,
 				4FCAD824230642C200B56EEC /* Info.plist */,
 				4FCAD81C230642C200B56EEC /* prac.xcdatamodeld */,
 			);
@@ -135,6 +133,40 @@
 				4FCAD83A230642C200B56EEC /* Info.plist */,
 			);
 			path = pracUITests;
+			sourceTree = "<group>";
+		};
+		4FEE736E231048C9000FDC75 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4F0044CA231030DE009A81A4 /* Product.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		4FEE736F231048D8000FDC75 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4FCAD817230642C200B56EEC /* ViewController.swift */,
+				4F293CED230B9BE5001504E2 /* DetailTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		4FEE7370231048F6000FDC75 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				4F0044C823103072009A81A4 /* NetworkManager.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		4FEE737123104904000FDC75 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				4FCAD819230642C200B56EEC /* Main.storyboard */,
+				4FCAD821230642C200B56EEC /* LaunchScreen.storyboard */,
+			);
+			path = Storyboards;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
