@@ -61,5 +61,4 @@ class DetailTableViewCell: UITableViewCell {
         stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8).isActive = true
         stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8).isActive = true
     }
-    
 }

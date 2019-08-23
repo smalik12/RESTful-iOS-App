@@ -60,48 +60,57 @@ class NetworkManager {
             "price": productPrice
         ]
         
-        let jsonData = try! JSONSerialization.data(withJSONObject: json, options: [])
-        
-        URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
-            if let error = error {
-                print(error)
-                return
-            }
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
             
-            if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                print(dataString)
+            URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
+                if let error = error {
+                    print(error)
+                    return
+                }
                 
-                self.fetchProducts(completion: {
-                    completion()
-                })
-            }
-        }.resume()
+                if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                    print(dataString)
+                    
+                    self.fetchProducts(completion: {
+                        completion()
+                    })
+                }
+            }.resume()
+        } catch {
+            print(error)
+        }
     }
     
     // DELETE Request
     static func deleteProduct(productId: String, index: Int, completion: @escaping () -> () = {}) {
-        let firstEndpoint: String = "http://localhost:3000/products/\(productId)"
-        var firstUrlRequest = URLRequest(url: URL(string: firstEndpoint)!)
-        firstUrlRequest.httpMethod = "DELETE"
-        URLSession.shared.dataTask(with: firstUrlRequest) { (data, response, error) in
+        let url = "http://localhost:3000/products/\(productId)"
+        guard let urlObj = URL(string: url) else { return }
+        var request = URLRequest(url: urlObj)
+        request.httpMethod = "DELETE"
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print(error)
                 print("Error deleting product with product ID: \(productId)")
                 return
             }
             
-            if let _ = data {
-                print("Successfully deleted product with product ID: \(productId)")
-                self.internalProductsArr.remove(at: index)
-                completion()
+            if data == nil {
+                return
             }
+            
+            print("Successfully deleted product with product ID: \(productId)")
+            self.internalProductsArr.remove(at: index)
+            completion()
+            
         }.resume()
     }
     
     // PUT Request
     static func updateProduct(product: Product, index: Int, completion: @escaping () -> () = {}) {
-        let url = URL(string: "http://localhost:3000/products/\(product._id)")!
-        var request = URLRequest(url: url)
+        let url = "http://localhost:3000/products/\(product._id)"
+        guard let urlObj = URL(string: url) else { return }
+        var request = URLRequest(url: urlObj)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
@@ -111,14 +120,18 @@ class NetworkManager {
             "price": product.price
         ]
         
-        let jsonData = try! JSONSerialization.data(withJSONObject: json, options: [])
-        
-        URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
-            if let data = data, let dataString = String(data: data, encoding: .utf8) {
-                print(dataString)
-                self.internalProductsArr[index] = product
-                completion()
-            }
-        }.resume()
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+            
+            URLSession.shared.uploadTask(with: request, from: jsonData) { data, response, error in
+                if let data = data, let dataString = String(data: data, encoding: .utf8) {
+                    print(dataString)
+                    self.internalProductsArr[index] = product
+                    completion()
+                }
+            }.resume()
+        } catch {
+            print(error)
+        }
     }
 }
