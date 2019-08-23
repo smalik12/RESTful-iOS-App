@@ -106,6 +106,7 @@ class NetworkManager {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let json: [String: Any] = [
+            "id": product._id,
             "name": product.name,
             "price": product.price
         ]
