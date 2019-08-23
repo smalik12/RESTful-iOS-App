@@ -20,7 +20,7 @@ class ViewController: UIViewController {
     
     let activityIndicatorView: UIActivityIndicatorView = {
         let activityIndicator = UIActivityIndicatorView()
-        
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         return activityIndicator
     }()
     
