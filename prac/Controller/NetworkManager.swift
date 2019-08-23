@@ -20,6 +20,8 @@ class NetworkManager {
         }
     }
     
+    private static let baseUrl: String = "http://localhost:3000/products"
+    
     // MARK: - Init
     // Private constructor to conform to Singleton pattern
     private init() {}
@@ -27,7 +29,7 @@ class NetworkManager {
     // MARK: - Methods
     // GET Request
     static func fetchProducts(completion: @escaping () -> () = {}) {
-        let url = "http://localhost:3000/products/"
+        let url = baseUrl
         guard let urlObj = URL(string: url) else { return }
         
         URLSession.shared.dataTask(with: urlObj) { (data, response, error) in
@@ -49,7 +51,7 @@ class NetworkManager {
     
     // POST Request
     static func createProduct(productName: String, productPrice: Int, completion: @escaping () -> () = {}) {
-        let url = "http://localhost:3000/products/create"
+        let url = "\(baseUrl)/create"
         guard let urlObj = URL(string: url) else { return }
         var request = URLRequest(url: urlObj)
         request.httpMethod = "POST"
@@ -84,7 +86,7 @@ class NetworkManager {
     
     // DELETE Request
     static func deleteProduct(productId: String, index: Int, completion: @escaping () -> () = {}) {
-        let url = "http://localhost:3000/products/\(productId)"
+        let url = "\(baseUrl)/\(productId)"
         guard let urlObj = URL(string: url) else { return }
         var request = URLRequest(url: urlObj)
         request.httpMethod = "DELETE"
@@ -108,7 +110,7 @@ class NetworkManager {
     
     // PUT Request
     static func updateProduct(product: Product, index: Int, completion: @escaping () -> () = {}) {
-        let url = "http://localhost:3000/products/\(product._id)"
+        let url = "\(baseUrl)/\(product._id)"
         guard let urlObj = URL(string: url) else { return }
         var request = URLRequest(url: urlObj)
         request.httpMethod = "PUT"

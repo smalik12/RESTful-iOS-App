@@ -188,7 +188,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         })
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { (action) in
+            tableView.deselectRow(at: indexPath, animated: true)
+        })
         
         alertController.addAction(okAction)
         alertController.addAction(cancelAction)
